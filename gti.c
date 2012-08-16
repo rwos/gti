@@ -30,12 +30,13 @@ int TERM_WIDTH;
 
 int main(int argc, char **argv)
 {
+    (void) argc;
     int i;
     TERM_WIDTH = term_width();
     init_space();
     for (i = -20; i < TERM_WIDTH; i++) {
         draw_car(i);
-        usleep(20*1000);
+        usleep(5*1000);
         clear_car(i);
     }
     execvp(GIT_NAME, argv);
