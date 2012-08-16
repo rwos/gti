@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-O2 -Wall -Wextra -static
+CFLAGS=-O2 -Wall -Wextra
 
 PROG=gti
 PREFIX=/usr/bin
