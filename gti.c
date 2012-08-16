@@ -12,7 +12,10 @@
  * is" without express or implied warranty.
  */
 
+#include "animation.h"
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <string.h>
@@ -38,9 +41,11 @@ int main(int argc, char **argv)
         usleep(20*1000);
         clear_car(i);
     }
-    execvp(GIT_NAME, argv);
-    /* error in exec if we land here */
-    perror(GIT_NAME);
+    if (argc > 1) {
+        execvp(GIT_NAME, argv);
+        /* error in exec if we land here */
+        perror(GIT_NAME);
+    }
     return 1;
 }
 
@@ -53,12 +58,14 @@ int term_width(void)
 
 void init_space(void)
 {
-    puts("\n\n\n\n\n\n"); /* 7 lines */
+    size_t line;
+    for (line = 0; line < ANIM_HEIGHT; line++)
+        putchar('\n');
 }
 
 void move_to_top(void)
 {
-    printf("\033[%dA", 7);
+    printf("\033[%dA", ANIM_HEIGHT);
 }
 
 void line_at(int start_x, const char *s)
@@ -76,31 +83,19 @@ void line_at(int start_x, const char *s)
 
 void draw_car(int x)
 {
+    size_t frame = abs(x % ANIM_FRAMES);
+    size_t line;
     move_to_top();
-    line_at(x, "   ,---------------.");
-    line_at(x, "  /  /``````|``````\\\\");
-    line_at(x, " /  /_______|_______\\\\________");
-    line_at(x, "|]      GTI |'       |        |]");
-    if (x % 2) {
-    line_at(x, "=  .-:-.    |________|  .-:-.  =");
-    line_at(x, " `  -+-  --------------  -+-  '");
-    line_at(x, "   '-:-'                '-:-'  ");
-    } else {
-    line_at(x, "=  .:-:.    |________|  .:-:.  =");
-    line_at(x, " `   X   --------------   X   '");
-    line_at(x, "   ':-:'                ':-:'  ");
-    }
+    for (line = 0; line < ANIM_HEIGHT; line++)
+        line_at(x, animation[frame][line]);
 }
 
 void clear_car(int x)
 {
+    size_t line;
     move_to_top();
-    line_at(x, "  ");
-    line_at(x, "  ");
-    line_at(x, "  ");
-    line_at(x, "  ");
-    line_at(x, "  ");
-    line_at(x, "  ");
-    line_at(x, "  ");
+    for (line = 0; line < ANIM_HEIGHT; line++)
+        line_at(x, "  ");
 }
 
+// vim:expandtab:tabstop=4:shiftwidth=4
