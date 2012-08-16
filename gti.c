@@ -30,6 +30,7 @@ int TERM_WIDTH;
 
 int main(int argc, char **argv)
 {
+    (void) argc;
     int i;
     TERM_WIDTH = term_width();
     init_space();
