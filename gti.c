@@ -59,7 +59,7 @@ void init_space(void)
 
 void move_to_top(void)
 {
-    printf("\033[%dA", 7);
+    printf("\033[7A");
 }
 
 void line_at(int start_x, const char *s)
