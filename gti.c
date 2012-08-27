@@ -13,6 +13,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <string.h>
@@ -39,7 +40,12 @@ int main(int argc, char **argv)
         usleep(20*1000);
         clear_car(i);
     }
-    execvp(GIT_NAME, argv);
+    char *git_path = getenv("GIT");
+    if (git_path) {
+      execv(git_path, argv);
+    } else {
+      execvp(GIT_NAME, argv);
+    }
     /* error in exec if we land here */
     perror(GIT_NAME);
     return 1;
