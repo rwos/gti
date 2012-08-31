@@ -19,6 +19,9 @@
 #include <string.h>
 
 #define GIT_NAME "git"
+#ifndef GTI_SPEED
+#define GTI_SPEED 40
+#endif
 
 int  term_width(void);
 void init_space(void);
@@ -37,7 +40,7 @@ int main(int argc, char **argv)
     init_space();
     for (i = -20; i < TERM_WIDTH; i++) {
         draw_car(i);
-        usleep(20*1000);
+        usleep(1000*100/GTI_SPEED);
         clear_car(i);
     }
     char *git_path = getenv("GIT");
