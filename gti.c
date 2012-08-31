@@ -28,16 +28,19 @@ void draw_car(int x);
 void clear_car(int x);
 
 int TERM_WIDTH;
+int SLEEP_DELAY;
 
 int main(int argc, char **argv)
 {
     (void) argc;
     int i;
     TERM_WIDTH = term_width();
+    SLEEP_DELAY = 500000 / (TERM_WIDTH + 20);
+    
     init_space();
     for (i = -20; i < TERM_WIDTH; i++) {
         draw_car(i);
-        usleep(20*1000);
+        usleep(SLEEP_DELAY);
         clear_car(i);
     }
     char *git_path = getenv("GIT");
