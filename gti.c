@@ -20,6 +20,10 @@
 
 #define GIT_NAME "git"
 
+#ifndef GTI_SPEED
+#define GTI_SPEED 50
+#endif
+
 int  term_width(void);
 void init_space(void);
 void move_to_top(void);
@@ -35,7 +39,7 @@ int main(int argc, char **argv)
     (void) argc;
     int i;
     TERM_WIDTH = term_width();
-    SLEEP_DELAY = 500000 / (TERM_WIDTH + 20);
+    SLEEP_DELAY = 1000000 / (TERM_WIDTH + GTI_SPEED);
     
     init_space();
     for (i = -20; i < TERM_WIDTH; i++) {
