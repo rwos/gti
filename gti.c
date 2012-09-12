@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <string.h>
+#include <signal.h>
 
 #define GIT_NAME "git"
 
@@ -38,6 +39,7 @@ int main(int argc, char **argv)
 {
     (void) argc;
     int i;
+    signal(SIGINT, SIG_IGN);
     TERM_WIDTH = term_width();
     SLEEP_DELAY = 1000000 / (TERM_WIDTH + GTI_SPEED);
     
