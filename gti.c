@@ -40,13 +40,15 @@ int main(int argc, char **argv)
     int i;
     TERM_WIDTH = term_width();
     SLEEP_DELAY = 1000000 / (TERM_WIDTH + GTI_SPEED);
-    
+
     init_space();
     for (i = -20; i < TERM_WIDTH; i++) {
         draw_car(i);
         usleep(SLEEP_DELAY);
         clear_car(i);
     }
+    move_to_top();
+    fflush(stdout);
     char *git_path = getenv("GIT");
     if (git_path) {
       execv(git_path, argv);
