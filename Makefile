@@ -1,22 +1,24 @@
 SHELL=/bin/sh
 
 CC=gcc
-CFLAGS=-O2 -Wall -Wextra
+CFLAGS+=-O2 -Wall -Wextra
+
+INSTALL=install -D
+
+BINDIR=$(DESTDIR)/usr/bin
 
 PROG=gti
-PREFIX=$(DESTDIR)/usr/bin
 
 $(PROG): *.c
-	$(CC) -o $@ $(CFLAGS) $^
+	$(CC) -o $@ $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $^
 	-strip -s $@
 
 install: $(PROG)
-	cp $^ $(PREFIX)
+	$(INSTALL) $(PROG) $(BINDIR)
 
 uninstall:
-	rm -f $(PREFIX)/$(PROG)
+	rm -f $(BINDIR)/$(PROG)
 
 .PHONY: clean install uninstall
 clean:
 	rm -f $(PROG)
-
