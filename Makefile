@@ -16,13 +16,12 @@ $(PROG): *.c
 	$(CC) -o $@ $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $^
 	-strip -s $@
 
-
 $(MANPAGE): gti.6
 	gzip -9 -n -c gti.6 > gti.6.gz
 
 install: $(PROG) $(MANPAGE)
-	$(INSTALL) $(PROG) $(BINDIR)
-	$(INSTALL_DATA) $(MANPAGE) $(MANDIR)
+	$(INSTALL) $(PROG) $(BINDIR)/$(PROG)
+	$(INSTALL_DATA) $(MANPAGE) $(MANDIR)/$(MANPAGE)
 
 uninstall:
 	rm -f $(BINDIR)/$(PROG)
