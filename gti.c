@@ -32,12 +32,16 @@ void draw_car(int x);
 void clear_car(int x);
 
 int TERM_WIDTH;
+FILE *TERM_FH;
 int SLEEP_DELAY;
 
 int main(int argc, char **argv)
 {
     (void) argc;
     int i;
+    TERM_FH = fopen("/dev/tty", "w");
+    if (!TERM_FH)
+        TERM_FH = stdout;
     TERM_WIDTH = term_width();
     SLEEP_DELAY = 1000000 / (TERM_WIDTH + GTI_SPEED);
 
@@ -48,7 +52,7 @@ int main(int argc, char **argv)
         clear_car(i);
     }
     move_to_top();
-    fflush(stdout);
+    fflush(TERM_FH);
     char *git_path = getenv("GIT");
     if (git_path) {
       execv(git_path, argv);
@@ -63,18 +67,18 @@ int main(int argc, char **argv)
 int term_width(void)
 {
     struct winsize w;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    ioctl(fileno(TERM_FH), TIOCGWINSZ, &w);
     return w.ws_col;
 }
 
 void init_space(void)
 {
-    puts("\n\n\n\n\n\n"); /* 7 lines */
+    fputs("\n\n\n\n\n\n", TERM_FH); /* 7 lines */
 }
 
 void move_to_top(void)
 {
-    printf("\033[7A");
+    fprintf(TERM_FH, "\033[7A");
 }
 
 void line_at(int start_x, const char *s)
@@ -82,12 +86,12 @@ void line_at(int start_x, const char *s)
     int x;
     size_t i;
     if (start_x > 1)
-        printf("\033[%dC", start_x);
+        fprintf(TERM_FH, "\033[%dC", start_x);
     for (x = start_x, i = 0; i < strlen(s); x++, i++) {
         if (x > 0 && x < TERM_WIDTH)
-            putchar(s[i]);
+            fputc(s[i], TERM_FH);
     }
-    putchar('\n');
+    fputc('\n', TERM_FH);
 }
 
 void draw_car(int x)
