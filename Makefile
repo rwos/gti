@@ -9,7 +9,11 @@ INSTALL_DATA=$(INSTALL) -m 644
 BINDIR=$(DESTDIR)/usr/bin
 MANDIR=$(DESTDIR)/usr/share/man/man6
 
-PROG=gti
+ifeq ($(OS),Windows_NT)
+ X = .exe
+endif
+
+PROG=gti$X
 MANPAGE=gti.6.gz
 
 $(PROG): *.c
