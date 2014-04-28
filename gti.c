@@ -69,7 +69,7 @@ int main(int argc, char **argv)
 
 void init_space(void)
 {
-    fputs("\n\n\n\n\n\n", TERM_FH); /* 7 lines */
+    fputs("\n\n\n\n\n\n\n", TERM_FH); /* 8 lines, to not remove the PS1 line */
 }
 
 #ifndef WIN32
