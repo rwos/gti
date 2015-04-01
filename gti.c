@@ -12,15 +12,44 @@
  * is" without express or implied warranty.
  */
 
+#if defined (_WIN32) && !defined(WIN32)
+#define WIN32
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#if defined(WIN32) && !defined(__CYGWIN__)
+#include <tchar.h>
+#include <process.h>
+#include <io.h>
+
+// usleep() doesn't exist on MSVC, instead use Sleep() from Win32 API
+#define usleep(a) Sleep((a) / 1000)
+
+// exec*() on MSVC makes the parent process exit; that means that gti.exe will finish as git is starting,
+// which causes cmd.exe to print its prompt over git's output (because it sees that the child process has
+// finished). The solution is to use synchronous spawn*(): it will make gti.exe to wait until git finishes.
+#define execv(a, b) return _tspawnv(_P_WAIT, (a), (b))
+#define execvp(a, b) return _tspawnvp(_P_WAIT, TEXT(a), (b))
+
+// Last but not least: Unicode. No idea how Cygwin deals with it, but for MSVC, you have to wide functions.
+#define getenv(a) _tgetenv(TEXT(a))
+#define perror(a) _tperror(TEXT(a))
+#else
 #include <unistd.h>
+
+#define TEXT(a) a
+#define TCHAR   char
+#define _tmain  main
+#endif
+
 #ifndef WIN32
 #include <sys/ioctl.h>
 #else
 #include <windows.h>
 #endif
-#include <string.h>
 
 #define GIT_NAME "git"
 
@@ -40,10 +69,12 @@ int TERM_WIDTH;
 FILE *TERM_FH;
 int SLEEP_DELAY;
 
-int main(int argc, char **argv)
+int _tmain(int argc, TCHAR **argv)
 {
-    (void) argc;
     int i;
+    TCHAR *git_path;
+    (void) argc;
+
     open_term();
     TERM_WIDTH = term_width();
     SLEEP_DELAY = 1000000 / (TERM_WIDTH + GTI_SPEED);
@@ -56,7 +87,7 @@ int main(int argc, char **argv)
     }
     move_to_top();
     fflush(TERM_FH);
-    char *git_path = getenv("GIT");
+    git_path = getenv("GIT");
     if (git_path) {
       execv(git_path, argv);
     } else {
@@ -142,23 +173,38 @@ void move_to_x(int x)
 
 void line_at(int start_x, const char *s)
 {
-    int x;
-    size_t i;
-    if (start_x > 1)
-        move_to_x(start_x);
-    for (x = start_x, i = 0; i < strlen(s); x++, i++) {
-        if (x > 0 && x < TERM_WIDTH)
-            fputc(s[i], TERM_FH);
+    // fputc() is too slow in Windows for smooth animation. Instead, here is equivalent code that
+    // writes into a buffer and then fputs() it. Proof of equivalence with the old version is
+    // available at request from joker.vd@gmail.com
+    int start, finish;
+    char *ptr;
+    static char * buff = 0;
+    if (!buff) buff = malloc(2 * TERM_WIDTH);
+
+    ptr = buff;
+
+    if (start_x > 1) {
+        memset(ptr, ' ', start_x - 1);
+        ptr += start_x - 1;
     }
-#ifdef WIN32
-    /*
-     * It seems Windows wraps on whe cursor when it's about to overflow,
-     * rather than after it has overflown (unless the overflowing character
-     * is a newline), as other systems seems to do.
-     */
-    if (x < TERM_WIDTH)
-#endif
-    fputc('\n', TERM_FH);
+
+    start = -start_x + 1;
+    if (start < 0) start = 0;
+
+    finish = strlen(s);
+    if (finish > TERM_WIDTH - start_x) finish = TERM_WIDTH - start_x;
+
+    if (start < finish) {
+        int len = finish - start;
+        memcpy(ptr, s + start, len);
+        ptr += len;
+    }
+
+    *ptr = '\n';
+    ptr++;
+
+    *ptr = '\0';
+    fputs(buff, TERM_FH);
 }
 
 void draw_car(int x)
