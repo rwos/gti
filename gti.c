@@ -12,15 +12,37 @@
  * is" without express or implied warranty.
  */
 
+#if defined (_WIN32) && !defined(WIN32)
+#define WIN32
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#if defined(WIN32) && !defined(__CYGWIN__)
+#include <process.h>
+#include <io.h>
+
+// usleep() doesn't exist on MSVC, instead use Sleep() from Win32 API
+#define usleep(a) Sleep((a) / 1000)
+
+// exec*() on MSVC makes the parent process exit; that means that gti.exe will finish as git is starting,
+// which causes cmd.exe to print its prompt over git's output (because it sees that the child process has
+// finished). The solution is to use synchronous spawn*(): it will make gti.exe to wait until git finishes.
+#define execv(a, b) do { i = _spawnv(_P_WAIT, (a), (b)); if (i != -1) return i; } while(0)
+#define execvp(a, b) do { i = _spawnvp(_P_WAIT, (a), (b)); if (i != -1) return i; } while(0)
+
+#else
 #include <unistd.h>
+#endif
+
 #ifndef WIN32
 #include <sys/ioctl.h>
 #else
 #include <windows.h>
 #endif
-#include <string.h>
+
 
 #define GIT_NAME "git"
 
@@ -42,8 +64,10 @@ int SLEEP_DELAY;
 
 int main(int argc, char **argv)
 {
-    (void) argc;
     int i;
+    char *git_path;
+    (void) argc;
+
     open_term();
     TERM_WIDTH = term_width();
     SLEEP_DELAY = 1000000 / (TERM_WIDTH + GTI_SPEED);
@@ -56,7 +80,7 @@ int main(int argc, char **argv)
     }
     move_to_top();
     fflush(TERM_FH);
-    char *git_path = getenv("GIT");
+    git_path = getenv("GIT");
     if (git_path) {
       execv(git_path, argv);
     } else {
@@ -70,6 +94,9 @@ int main(int argc, char **argv)
 void init_space(void)
 {
     fputs("\n\n\n\n\n\n\n", TERM_FH); /* 8 lines, to not remove the PS1 line */
+#ifdef WIN32
+    fflush(TERM_FH);
+#endif
 }
 
 #ifndef WIN32
@@ -106,12 +133,6 @@ void open_term()
 {
     TERM_FH = fopen("CONOUT$", "w+");
     con = (HANDLE)_get_osfhandle(fileno(TERM_FH));
-
-    /*
-     * Both buffered and non-buffered access to the same handle is
-     * recepie for disaster. Disable buffering.
-     */
-    setvbuf(TERM_FH, NULL, _IONBF, 0);
 }
 
 int term_width(void)
@@ -159,6 +180,10 @@ void line_at(int start_x, const char *s)
     if (x < TERM_WIDTH)
 #endif
     fputc('\n', TERM_FH);
+    
+#ifdef WIN32
+    fflush(TERM_FH);
+#endif
 }
 
 void draw_car(int x)
