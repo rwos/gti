@@ -43,6 +43,11 @@
 #include <windows.h>
 #endif
 
+// SunOS defines winsize in termios.h
+#if defined(__sun) && defined(__SVR4)
+#include <sys/termios.h>
+#endif
+
 
 #define GIT_NAME "git"
 
