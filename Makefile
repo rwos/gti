@@ -9,16 +9,23 @@ INSTALL_DATA=$(INSTALL) -m 644
 BINDIR=$(DESTDIR)/usr/bin
 MANDIR=$(DESTDIR)/usr/share/man/man6
 
+STRIP=strip
 ifeq ($(OS),Windows_NT)
  X = .exe
+else
+  ifeq ($(shell uname), SunOS)
+    STRIP=gstrip
+  endif
 endif
 
 PROG=gti$X
 MANPAGE=gti.6.gz
 
+print-%  : ; @echo $* = $($*)
+
 $(PROG): *.c
 	$(CC) -o $@ $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $^
-	-strip -s $@
+	-$(STRIP) -s $@
 
 $(MANPAGE): gti.6
 	gzip -9 -n -c gti.6 > gti.6.gz
