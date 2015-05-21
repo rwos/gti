@@ -21,8 +21,6 @@ endif
 PROG=gti$X
 MANPAGE=gti.6.gz
 
-print-%  : ; @echo $* = $($*)
-
 $(PROG): *.c
 	$(CC) -o $@ $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $^
 	-$(STRIP) -s $@
