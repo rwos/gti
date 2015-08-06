@@ -75,10 +75,10 @@ int main(int argc, char **argv)
     char *git_path;
     (void) argc;
 
-	char *gtspd = getenv("GTI_SPEED");
-	if (gtspd) {
-		sscanf(gtspd, "%i", &gti_speed);
-	}
+    char *gtspd = getenv("GTI_SPEED");
+    if (gtspd) {
+        sscanf(gtspd, "%i", &gti_speed);
+    }
 
     open_term();
     TERM_WIDTH = term_width();
