@@ -67,15 +67,22 @@ int TERM_WIDTH;
 FILE *TERM_FH;
 int SLEEP_DELAY;
 
+int gti_speed = GTI_SPEED;
+
 int main(int argc, char **argv)
 {
     int i;
     char *git_path;
     (void) argc;
 
+	char *gtspd = getenv("GTI_SPEED");
+	if (gtspd) {
+		sscanf(gtspd, "%i", &gti_speed);
+	}
+
     open_term();
     TERM_WIDTH = term_width();
-    SLEEP_DELAY = 1000000 / (TERM_WIDTH + GTI_SPEED);
+    SLEEP_DELAY = 1000000 / (TERM_WIDTH + gti_speed);
 
     init_space();
     for (i = -20; i < TERM_WIDTH; i++) {
