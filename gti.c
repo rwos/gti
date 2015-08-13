@@ -82,7 +82,14 @@ int main(int argc, char **argv)
 
     open_term();
     TERM_WIDTH = term_width();
-    SLEEP_DELAY = 1000000 / (TERM_WIDTH + gti_speed);
+    SLEEP_DELAY = TERM_WIDTH + gti_speed;
+
+    if (SLEEP_DELAY) {
+        SLEEP_DELAY = 1000000 / SLEEP_DELAY;
+    }
+    else {
+        SLEEP_DELAY = 1000000 / TERM_WIDTH;
+    }
 
     init_space();
     for (i = -20; i < TERM_WIDTH; i++) {

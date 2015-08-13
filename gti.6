@@ -11,9 +11,20 @@ parameters or arguments given to \fBgti\fP will be passed through to git.
 The car image is derived from the look of an old VW Golf GTI.
 
 .SH ENVIRONMENT
-\fBgti\fP respects the GIT environment variable. If GIT is set, its value will
+.TP
+.B GIT
+\fBgti\fP respects the
+.RB $ GIT
+environment variable. If GIT is set, its value will
 be used to launch git after the animation finishes, instead of searching for
 git in your PATH.
+.TP
+.B GTI_SPEED
+If
+.RB $ GTI_SPEED
+is set to a parsable integer, its value is used to control the speed of the
+animation.
+
 
 .SH SEE ALSO
 \fBgit\fP(1), \fBsl\fP(6)
