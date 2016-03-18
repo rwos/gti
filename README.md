@@ -6,6 +6,18 @@ Just a silly `git` launcher, basically. Inspired by `sl`.
 Build and Install
 -----------------
 
+From a package system:
+* [Fedora](https://admin.fedoraproject.org/pkgdb/package/rpms/gti/)
+* it's in ArchLinux' AUR as [gti-git](https://aur.archlinux.org/packages/gti-git/) and as [gti](https://aur.archlinux.org/packages/gti/)
+* [Gentoo](https://packages.gentoo.org/packages/dev-vcs/gti)
+* [Nix/NixOS](https://github.com/NixOS/nixpkgs/pull/13453)
+* [FreeBSD ports](http://svnweb.freebsd.org/ports/head/games/gti/)
+* [OpenBSD ports](http://openports.se/games/gti)
+* [Homebrew/MacOS X](http://braumeister.org/formula/gti)
+* ([it's not in Debian yet](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=705850))
+
+From source:
+
     $ make
     $ make install # as root, probably
 
@@ -15,10 +27,6 @@ You can change the speed of the car at compile time via a cpp-define.
 For example:
 
     $ make CFLAGS=-DGTI_SPEED=100 # default is 50
-    
-You can also use Homebrew on Mac OS X:
-
-    $ brew install gti
 
 Usage
 -----
