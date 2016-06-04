@@ -1,6 +1,6 @@
 SHELL=/bin/sh
 
-CC=gcc
+CC=cc
 CFLAGS+=-O2 -Wall -Wextra
 
 INSTALL=install -D
