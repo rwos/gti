@@ -52,7 +52,7 @@
 #define GIT_NAME "git"
 
 #ifndef GTI_SPEED
-#define GTI_SPEED 50
+#define GTI_SPEED 1
 #endif
 
 int  term_width(void);
@@ -62,7 +62,7 @@ void move_to_top(void);
 void line_at(int start_x, const char *s);
 void draw_car(int x);
 void clear_car(int x);
-
+void push_car(int x);
 int TERM_WIDTH;
 FILE *TERM_FH;
 int SLEEP_DELAY;
@@ -72,14 +72,18 @@ int main(int argc, char **argv)
     int i;
     char *git_path;
     (void) argc;
-
+    
+    char push[5];
+    memcpy(push, (*argv)+6, 4);
+    push[4] = '\0';
     open_term();
     TERM_WIDTH = term_width();
-    SLEEP_DELAY = 1000000 / (TERM_WIDTH + GTI_SPEED);
-
+    SLEEP_DELAY = 1300000 / (TERM_WIDTH + GTI_SPEED);
+   
     init_space();
-    for (i = -20; i < TERM_WIDTH; i++) {
-        draw_car(i);
+	for (i = -20; i < TERM_WIDTH; i++) {
+      if (!strcmp(push, "push")) push_car(i); 
+       else draw_car(i);
         usleep(SLEEP_DELAY);
         clear_car(i);
     }
@@ -191,9 +195,38 @@ void line_at(int start_x, const char *s)
 #endif
 }
 
+void push_car(int x)
+{
+    move_to_top();
+    line_at(x, "   __      ,---------------.");
+    line_at(x, "  /--\\   /  /``````|``````\\\\");
+    line_at(x, "  \\__/  /  /_______|_______\\\\________");
+    line_at(x, "   ||-< |]      GTI |'       |        |]");
+    if (x % 2) {
+    line_at(x, "   ||-< =  .-:-.    |________|  .-:-.  =");
+    line_at(x, "   ||    `  -+-  --------------  -+-  '");
+    line_at(x, "   ||      '-:-'                '-:-'  ");
+    } else {
+    line_at(x, "   ||-< =  .:-:.    |________|  .:-:.  =");
+    line_at(x, "   /\\    `   X   --------------   X   '");
+    line_at(x, "  /  \\     ':-:'                ':-:'  ");
+    }
+}
+
 void draw_car(int x)
 {
     move_to_top();
+    if (x == 23) {
+        line_at(x, "                 | |");
+        line_at(x, "  ___  _ __   ___| |");
+        line_at(x, " / _ \\| '_ \\ / _ \\ |");
+        line_at(x, "| (_) | |_) |  __/ |");
+        line_at(x, " \\___/| .__/ \\___|_|");
+        line_at(x, "      | |           ");
+        line_at(x, "      |_|           ");
+        return;
+    } 
+
     line_at(x, "   ,---------------.");
     line_at(x, "  /  /``````|``````\\\\");
     line_at(x, " /  /_______|_______\\\\________");
@@ -207,7 +240,12 @@ void draw_car(int x)
     line_at(x, " `   X   --------------   X   '");
     line_at(x, "   ':-:'                ':-:'  ");
     }
+
 }
+
+
+
+
 
 void clear_car(int x)
 {
