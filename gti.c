@@ -74,7 +74,7 @@ int main(int argc, char **argv)
     (void) argc;
     
     char push[5];
-    memcpy(push, (*argv)+6, 4);
+    memcpy(push, (*argv)+4, 4);
     push[4] = '\0';
     open_term();
     TERM_WIDTH = term_width();
