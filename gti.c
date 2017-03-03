@@ -52,7 +52,7 @@
 #define GIT_NAME "git"
 
 #ifndef GTI_SPEED
-#define GTI_SPEED 1
+#define GTI_SPEED 50
 #endif
 
 int  term_width(void);
@@ -72,20 +72,19 @@ int main(int argc, char **argv)
     int i;
     char *git_path;
     (void) argc;
-    
-    char push[5];
-    memcpy(push, (*argv)+4, 4);
-    push[4] = '\0';
+
     open_term();
     TERM_WIDTH = term_width();
-    SLEEP_DELAY = 1300000 / (TERM_WIDTH + GTI_SPEED);
-   
+    SLEEP_DELAY = 1000000 / (TERM_WIDTH + GTI_SPEED);
+
     init_space();
-	for (i = -20; i < TERM_WIDTH; i++) {
-      if (!strcmp(push, "push")) push_car(i); 
-       else draw_car(i);
-        usleep(SLEEP_DELAY);
-        clear_car(i);
+	  for (i = -20; i < TERM_WIDTH; i++) {
+      if (argc > 1 && !strcmp(argv[1], "push"))
+        push_car(i);
+      else
+        draw_car(i);
+      usleep(SLEEP_DELAY);
+      clear_car(i);
     }
     move_to_top();
     fflush(TERM_FH);
@@ -189,7 +188,7 @@ void line_at(int start_x, const char *s)
     if (x < TERM_WIDTH)
 #endif
     fputc('\n', TERM_FH);
-    
+
 #ifdef WIN32
     fflush(TERM_FH);
 #endif
@@ -225,7 +224,7 @@ void draw_car(int x)
         line_at(x, "      | |           ");
         line_at(x, "      |_|           ");
         return;
-    } 
+    }
 
     line_at(x, "   ,---------------.");
     line_at(x, "  /  /``````|``````\\\\");
@@ -258,4 +257,3 @@ void clear_car(int x)
     line_at(x, "  ");
     line_at(x, "  ");
 }
-
