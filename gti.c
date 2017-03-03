@@ -63,6 +63,7 @@ void line_at(int start_x, const char *s);
 void draw_car(int x);
 void clear_car(int x);
 void push_car(int x);
+int checkPushCommand(int argc, char** argv);
 int TERM_WIDTH;
 FILE *TERM_FH;
 int SLEEP_DELAY;
@@ -79,7 +80,7 @@ int main(int argc, char **argv)
 
     init_space();
 	  for (i = -20; i < TERM_WIDTH; i++) {
-      if (argc > 1 && !strcmp(argv[1], "push"))
+      if (checkPushCommand(argc, argv))
         push_car(i);
       else
         draw_car(i);
@@ -97,6 +98,16 @@ int main(int argc, char **argv)
     /* error in exec if we land here */
     perror(GIT_NAME);
     return 1;
+}
+
+/*return true if push command found*/
+int checkPushCommand(int argc, char** argv) {
+  if (argc <= 1) return 0;
+  int i = 1;
+  while (i < argc)
+  if (!strcmp(argv[i++], "push"))
+    return 1;
+  return 0;
 }
 
 void init_space(void)
