@@ -79,7 +79,7 @@ int main(int argc, char **argv)
     SLEEP_DELAY = 1000000 / (TERM_WIDTH + GTI_SPEED);
 
     init_space();
-	  for (i = -20; i < TERM_WIDTH; i++) {
+    for (i = -20; i < TERM_WIDTH; i++) {
       if (checkPushCommand(argc, argv))
         push_car(i);
       else
