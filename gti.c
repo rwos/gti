@@ -102,11 +102,11 @@ int main(int argc, char **argv)
 
 /*return true if push command found*/
 int checkPushCommand(int argc, char** argv) {
-  if (argc <= 1) return 0;
-  int i = 1;
-  while (i < argc)
-  if (!strcmp(argv[i++], "push"))
-    return 1;
+  for (int i = 1; i < argc; i++) {
+    if (argv[i][0] == '-') continue;
+    if (!strcmp(argv[i], "push")) return 1;
+    break;
+  }
   return 0;
 }
 
