@@ -63,7 +63,7 @@ void line_at(int start_x, const char *s);
 void draw_car(int x);
 void clear_car(int x);
 void push_car(int x);
-int checkPushCommand(int argc, char** argv);
+int check_push_command(int argc, char **argv);
 int TERM_WIDTH;
 FILE *TERM_FH;
 int SLEEP_DELAY;
@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 {
     int i;
     char *git_path;
-    (void) argc;
+    int pushing = check_push_command(argc, argv);
 
     open_term();
     TERM_WIDTH = term_width();
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
 
     init_space();
     for (i = -20; i < TERM_WIDTH; i++) {
-      if (checkPushCommand(argc, argv))
+      if (pushing)
         push_car(i);
       else
         draw_car(i);
@@ -100,14 +100,15 @@ int main(int argc, char **argv)
     return 1;
 }
 
-/*return true if push command found*/
-int checkPushCommand(int argc, char** argv) {
-  for (int i = 1; i < argc; i++) {
-    if (argv[i][0] == '-') continue;
-    if (!strcmp(argv[i], "push")) return 1;
-    break;
-  }
-  return 0;
+/*return 1 if push command found*/
+int check_push_command(int argc, char **argv)
+{
+    for (int i = 1; i < argc; i++) {
+      if (argv[i][0] == '-') continue;
+      if (!strcmp(argv[i], "push")) return 1;
+      break;
+    }
+    return 0;
 }
 
 void init_space(void)
@@ -226,17 +227,6 @@ void push_car(int x)
 void draw_car(int x)
 {
     move_to_top();
-    if (x == 23) {
-        line_at(x, "                 | |");
-        line_at(x, "  ___  _ __   ___| |");
-        line_at(x, " / _ \\| '_ \\ / _ \\ |");
-        line_at(x, "| (_) | |_) |  __/ |");
-        line_at(x, " \\___/| .__/ \\___|_|");
-        line_at(x, "      | |           ");
-        line_at(x, "      |_|           ");
-        return;
-    }
-
     line_at(x, "   ,---------------.");
     line_at(x, "  /  /``````|``````\\\\");
     line_at(x, " /  /_______|_______\\\\________");
@@ -250,12 +240,7 @@ void draw_car(int x)
     line_at(x, " `   X   --------------   X   '");
     line_at(x, "   ':-:'                ':-:'  ");
     }
-
 }
-
-
-
-
 
 void clear_car(int x)
 {
