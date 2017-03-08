@@ -59,7 +59,7 @@ HANDLE WIN_CONSOLE;
 #define GIT_NAME "git"
 
 #ifndef GTI_SPEED
-#    define GTI_SPEED 50
+#    define GTI_SPEED 1000
 #endif
 
 int term_width(void);
@@ -74,21 +74,27 @@ void draw_std(int x);
 void draw_push(int x);
 draw_fn_t select_command(int argc, char **argv);
 
-int TERM_WIDTH;
 FILE *TERM_FH;
-int SLEEP_DELAY;
+int TERM_WIDTH;
+unsigned int FRAME_TIME;
 
 int main(int argc, char **argv)
 {
     int i;
     char *git_path;
+    char *tmp;
+    unsigned int gti_speed;
     draw_fn_t draw_fn;
 
-    draw_fn = select_command(argc, argv);
-
+    tmp = getenv("GTI_SPEED");
+    if (!tmp || sscanf(tmp, "%u", &gti_speed) != 1) {
+       gti_speed = GTI_SPEED;
+    }
     open_term();
     TERM_WIDTH = term_width();
+    FRAME_TIME = 1000 * 1000 * 10 / (gti_speed + TERM_WIDTH + 1);
 
+    draw_fn = select_command(argc, argv);
     init_space();
     for (i = -20; i < TERM_WIDTH; i++) {
         draw_fn(i);
@@ -219,7 +225,7 @@ void draw_std(int x)
     line_at(x, "   ':-:'                ':-:'  ");
     }
     /* *INDENT-ON* */
-    usleep(1000000 / (TERM_WIDTH + GTI_SPEED));
+    usleep(FRAME_TIME);
 }
 
 void draw_push(int x)
@@ -240,7 +246,7 @@ void draw_push(int x)
     line_at(x, "  /  \\     ':-:'                ':-:'  ");
     }
     /* *INDENT-ON* */
-    usleep(20000000 / (TERM_WIDTH + GTI_SPEED));
+    usleep(FRAME_TIME * 10);
 }
 
 void clear_car(int x)
