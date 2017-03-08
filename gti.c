@@ -70,8 +70,8 @@ void line_at(int start_x, const char *s);
 void clear_car(int x);
 
 typedef void (*draw_fn_t)(int x);
-void draw_car(int x);
-void push_car(int x);
+void draw_std(int x);
+void draw_push(int x);
 draw_fn_t select_command(int argc, char **argv);
 
 int TERM_WIDTH;
@@ -118,10 +118,10 @@ draw_fn_t select_command(int argc, char **argv)
         if (argv[i][0] == '-')
             continue;
         if (!strcmp(argv[i], "push"))
-            return push_car;
+            return draw_push;
         break;
     }
-    return draw_car;
+    return draw_std;
 }
 
 void init_space(void)
@@ -203,27 +203,7 @@ void line_at(int start_x, const char *s)
     fflush(TERM_FH);
 }
 
-void push_car(int x)
-{
-    /* *INDENT-OFF* */
-    move_to_top();
-    line_at(x, "   __      ,---------------.");
-    line_at(x, "  /--\\   /  /``````|``````\\\\");
-    line_at(x, "  \\__/  /  /_______|_______\\\\________");
-    line_at(x, "   ||-< |]      GTI |'       |        |]");
-    if (x % 2) {
-    line_at(x, "   ||-< =  .-:-.    |________|  .-:-.  =");
-    line_at(x, "   ||    `  -+-  --------------  -+-  '");
-    line_at(x, "   ||      '-:-'                '-:-'  ");
-    } else {
-    line_at(x, "   ||-< =  .:-:.    |________|  .:-:.  =");
-    line_at(x, "   /\\    `   X   --------------   X   '");
-    line_at(x, "  /  \\     ':-:'                ':-:'  ");
-    }
-    /* *INDENT-ON* */
-}
-
-void draw_car(int x)
+void draw_std(int x)
 {
     /* *INDENT-OFF* */
     move_to_top();
@@ -239,6 +219,26 @@ void draw_car(int x)
     line_at(x, "=  .:-:.    |________|  .:-:.  =");
     line_at(x, " `   X   --------------   X   '");
     line_at(x, "   ':-:'                ':-:'  ");
+    }
+    /* *INDENT-ON* */
+}
+
+void draw_push(int x)
+{
+    /* *INDENT-OFF* */
+    move_to_top();
+    line_at(x, "   __      ,---------------.");
+    line_at(x, "  /--\\   /  /``````|``````\\\\");
+    line_at(x, "  \\__/  /  /_______|_______\\\\________");
+    line_at(x, "   ||-< |]      GTI |'       |        |]");
+    if (x % 2) {
+    line_at(x, "   ||-< =  .-:-.    |________|  .-:-.  =");
+    line_at(x, "   ||    `  -+-  --------------  -+-  '");
+    line_at(x, "   ||      '-:-'                '-:-'  ");
+    } else {
+    line_at(x, "   ||-< =  .:-:.    |________|  .:-:.  =");
+    line_at(x, "   /\\    `   X   --------------   X   '");
+    line_at(x, "  /  \\     ':-:'                ':-:'  ");
     }
     /* *INDENT-ON* */
 }
