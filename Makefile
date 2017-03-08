@@ -1,7 +1,7 @@
 SHELL=/bin/sh
 
 CC=cc
-CFLAGS+=-O2 -Wall -Wextra
+CFLAGS+=-O2 -std=c89 -Wpedantic -Wall -Wextra -Wunused -Wshadow -Wdouble-promotion -Wstrict-overflow=5
 
 INSTALL=install -D
 INSTALL_DATA=$(INSTALL) -m 644
@@ -35,6 +35,11 @@ install: $(PROG) $(MANPAGE)
 uninstall:
 	rm -f $(BINDIR)/$(PROG)
 	rm -f $(MANDIR)/$(MANPAGE)
+
+fmt: *.c
+	VERSION_CONTROL=never indent -kr -i4 -ppi4 -nut -l100 -cp0 -ncs -sob \
+		-T HANDLE \
+		$^
 
 .PHONY: clean install uninstall
 clean:
