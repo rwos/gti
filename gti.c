@@ -227,6 +227,17 @@ void push_car(int x)
 void draw_car(int x)
 {
     move_to_top();
+    if (x == 23) {
+        line_at(x, "                 | |");
+        line_at(x, "  ___  _ __   ___| |");
+        line_at(x, " / _ \\| '_ \\ / _ \\ |");
+        line_at(x, "| (_) | |_) |  __/ |");
+        line_at(x, " \\___/| .__/ \\___|_|");
+        line_at(x, "      | |           ");
+        line_at(x, "      |_|           ");
+        return;
+    } 
+
     line_at(x, "   ,---------------.");
     line_at(x, "  /  /``````|``````\\\\");
     line_at(x, " /  /_______|_______\\\\________");
@@ -240,6 +251,7 @@ void draw_car(int x)
     line_at(x, " `   X   --------------   X   '");
     line_at(x, "   ':-:'                ':-:'  ");
     }
+
 }
 
 void clear_car(int x)
