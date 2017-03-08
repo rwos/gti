@@ -88,12 +88,10 @@ int main(int argc, char **argv)
 
     open_term();
     TERM_WIDTH = term_width();
-    SLEEP_DELAY = 1000000 / (TERM_WIDTH + GTI_SPEED);
 
     init_space();
     for (i = -20; i < TERM_WIDTH; i++) {
         draw_fn(i);
-        usleep(SLEEP_DELAY);
         clear_car(i);
     }
     move_to_top();
@@ -221,6 +219,7 @@ void draw_std(int x)
     line_at(x, "   ':-:'                ':-:'  ");
     }
     /* *INDENT-ON* */
+    usleep(1000000 / (TERM_WIDTH + GTI_SPEED));
 }
 
 void draw_push(int x)
@@ -241,6 +240,7 @@ void draw_push(int x)
     line_at(x, "  /  \\     ':-:'                ':-:'  ");
     }
     /* *INDENT-ON* */
+    usleep(20000000 / (TERM_WIDTH + GTI_SPEED));
 }
 
 void clear_car(int x)
