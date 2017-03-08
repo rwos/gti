@@ -1,7 +1,7 @@
 SHELL=/bin/sh
 
 CC=cc
-CFLAGS+=-O2 -Wall -Wextra -Wunused -Wshadow -Wpedantic -Wdouble-promotion -Wstrict-overflow=5
+CFLAGS+=-O2 -std=c89 -Wpedantic -Wall -Wextra -Wunused -Wshadow -Wpedantic -Wdouble-promotion -Wstrict-overflow=5
 
 INSTALL=install -D
 INSTALL_DATA=$(INSTALL) -m 644
@@ -37,7 +37,7 @@ uninstall:
 	rm -f $(MANDIR)/$(MANPAGE)
 
 fmt: *.c
-	VERSION_CONTROL=never indent -kr -i4 -nut -l100 -cp0 -ncs \
+	VERSION_CONTROL=never indent -kr -i4 -nut -l100 -cp0 -ncs -ppi 4 \
 		-T HANDLE \
 		$^
 

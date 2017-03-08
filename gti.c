@@ -13,7 +13,12 @@
  */
 
 #if defined (_WIN32) && !defined(WIN32)
-#define WIN32
+#    define WIN32
+#else
+     /* fileno() */
+#    define _POSIX_C_SOURCE
+     /* usleep() */
+#    define _DEFAULT_SOURCE
 #endif
 
 #include <stdio.h>
@@ -21,38 +26,40 @@
 #include <string.h>
 
 #if defined(WIN32) && !defined(__CYGWIN__)
-#include <process.h>
-#include <io.h>
+#    include <process.h>
+#    include <io.h>
 
-// usleep() doesn't exist on MSVC, instead use Sleep() from Win32 API
-#define usleep(a) Sleep((a) / 1000)
+/* usleep() doesn't exist on MSVC, instead use Sleep() from Win32 API */
+#    define usleep(a) Sleep((a) / 1000)
 
-// exec*() on MSVC makes the parent process exit; that means that gti.exe will finish as git is starting,
-// which causes cmd.exe to print its prompt over git's output (because it sees that the child process has
-// finished). The solution is to use synchronous spawn*(): it will make gti.exe to wait until git finishes.
-#define execv(a, b) do { i = _spawnv(_P_WAIT, (a), (b)); if (i != -1) return i; } while(0)
-#define execvp(a, b) do { i = _spawnvp(_P_WAIT, (a), (b)); if (i != -1) return i; } while(0)
+/*
+ * exec*() on MSVC makes the parent process exit; that means that gti.exe will finish as git is starting,
+ * which causes cmd.exe to print its prompt over git's output (because it sees that the child process has
+ * finished). The solution is to use synchronous spawn*(): it will make gti.exe to wait until git finishes.
+ */
+#    define execv(a, b) do { i = _spawnv(_P_WAIT, (a), (b)); if (i != -1) return i; } while(0)
+#    define execvp(a, b) do { i = _spawnvp(_P_WAIT, (a), (b)); if (i != -1) return i; } while(0)
 
 #else
-#include <unistd.h>
+#    include <unistd.h>
 #endif
 
 #ifndef WIN32
-#include <sys/ioctl.h>
+#    include <sys/ioctl.h>
 #else
-#include <windows.h>
+#    include <windows.h>
 #endif
 
-// SunOS defines winsize in termios.h
+/* SunOS defines winsize in termios.h */
 #if defined(__sun) && defined(__SVR4)
-#include <sys/termios.h>
+#    include <sys/termios.h>
 #endif
 
 
 #define GIT_NAME "git"
 
 #ifndef GTI_SPEED
-#define GTI_SPEED 50
+#    define GTI_SPEED 50
 #endif
 
 int term_width(void);
@@ -60,10 +67,11 @@ void init_space(void);
 void open_term();
 void move_to_top(void);
 void line_at(int start_x, const char *s);
-void draw_car(int x);
 void clear_car(int x);
+void draw_car(int x);
 void push_car(int x);
 int check_push_command(int argc, char **argv);
+
 int TERM_WIDTH;
 FILE *TERM_FH;
 int SLEEP_DELAY;
@@ -100,10 +108,12 @@ int main(int argc, char **argv)
     return 1;
 }
 
-/*return 1 if push command found*/
+/* return 1 if push command found*/
 int check_push_command(int argc, char **argv)
 {
-    for (int i = 1; i < argc; i++) {
+    int i;
+
+    for (i = 1; i < argc; i++) {
         if (argv[i][0] == '-')
             continue;
         if (!strcmp(argv[i], "push"))
@@ -210,7 +220,7 @@ void line_at(int start_x, const char *s)
 
 void push_car(int x)
 {
-    // *INDENT-OFF*
+    /* *INDENT-OFF* */
     move_to_top();
     line_at(x, "   __      ,---------------.");
     line_at(x, "  /--\\   /  /``````|``````\\\\");
@@ -225,12 +235,12 @@ void push_car(int x)
     line_at(x, "   /\\    `   X   --------------   X   '");
     line_at(x, "  /  \\     ':-:'                ':-:'  ");
     }
-    // *INDENT-ON*
+    /* *INDENT-ON* */
 }
 
 void draw_car(int x)
 {
-    // *INDENT-OFF*
+    /* *INDENT-OFF* */
     move_to_top();
     line_at(x, "   ,---------------.");
     line_at(x, "  /  /``````|``````\\\\");
@@ -245,7 +255,7 @@ void draw_car(int x)
     line_at(x, " `   X   --------------   X   '");
     line_at(x, "   ':-:'                ':-:'  ");
     }
-    // *INDENT-ON*
+    /* *INDENT-ON* */
 }
 
 void clear_car(int x)
