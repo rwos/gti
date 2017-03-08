@@ -23,10 +23,10 @@ From source:
 
 The default install PREFIX is `/usr/bin`.
 
-You can change the speed of the car at compile time via a cpp-define.
+You can change the speed of the car at runtime via `GTI_SPEED`.
 For example:
 
-    $ make CFLAGS=-DGTI_SPEED=100 # default is 50
+    $ GTI_SPEED=2000 gti push # default is 1000
 
 Usage
 -----
