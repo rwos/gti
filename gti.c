@@ -62,7 +62,8 @@ void move_to_top(void);
 void line_at(int start_x, const char *s);
 void draw_car(int x);
 void clear_car(int x);
-
+void push_car(int x);
+int check_push_command(int argc, char **argv);
 int TERM_WIDTH;
 FILE *TERM_FH;
 int SLEEP_DELAY;
@@ -71,7 +72,7 @@ int main(int argc, char **argv)
 {
     int i;
     char *git_path;
-    (void) argc;
+    int pushing = check_push_command(argc, argv);
 
     open_term();
     TERM_WIDTH = term_width();
@@ -79,9 +80,12 @@ int main(int argc, char **argv)
 
     init_space();
     for (i = -20; i < TERM_WIDTH; i++) {
+      if (pushing)
+        push_car(i);
+      else
         draw_car(i);
-        usleep(SLEEP_DELAY);
-        clear_car(i);
+      usleep(SLEEP_DELAY);
+      clear_car(i);
     }
     move_to_top();
     fflush(TERM_FH);
@@ -94,6 +98,17 @@ int main(int argc, char **argv)
     /* error in exec if we land here */
     perror(GIT_NAME);
     return 1;
+}
+
+/*return 1 if push command found*/
+int check_push_command(int argc, char **argv)
+{
+    for (int i = 1; i < argc; i++) {
+      if (argv[i][0] == '-') continue;
+      if (!strcmp(argv[i], "push")) return 1;
+      break;
+    }
+    return 0;
 }
 
 void init_space(void)
@@ -185,10 +200,28 @@ void line_at(int start_x, const char *s)
     if (x < TERM_WIDTH)
 #endif
     fputc('\n', TERM_FH);
-    
+
 #ifdef WIN32
     fflush(TERM_FH);
 #endif
+}
+
+void push_car(int x)
+{
+    move_to_top();
+    line_at(x, "   __      ,---------------.");
+    line_at(x, "  /--\\   /  /``````|``````\\\\");
+    line_at(x, "  \\__/  /  /_______|_______\\\\________");
+    line_at(x, "   ||-< |]      GTI |'       |        |]");
+    if (x % 2) {
+    line_at(x, "   ||-< =  .-:-.    |________|  .-:-.  =");
+    line_at(x, "   ||    `  -+-  --------------  -+-  '");
+    line_at(x, "   ||      '-:-'                '-:-'  ");
+    } else {
+    line_at(x, "   ||-< =  .:-:.    |________|  .:-:.  =");
+    line_at(x, "   /\\    `   X   --------------   X   '");
+    line_at(x, "  /  \\     ':-:'                ':-:'  ");
+    }
 }
 
 void draw_car(int x)
@@ -220,4 +253,3 @@ void clear_car(int x)
     line_at(x, "  ");
     line_at(x, "  ");
 }
-
