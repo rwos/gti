@@ -48,6 +48,7 @@
 #    include <sys/ioctl.h>
 #else
 #    include <windows.h>
+HANDLE WIN_CONSOLE;
 #endif
 
 /* SunOS defines winsize in termios.h */
@@ -126,72 +127,58 @@ draw_fn_t select_command(int argc, char **argv)
 void init_space(void)
 {
     fputs("\n\n\n\n\n\n\n", TERM_FH);   /* 8 lines, to not remove the PS1 line */
-#ifdef WIN32
     fflush(TERM_FH);
-#endif
 }
-
-#ifndef WIN32
 
 void open_term()
 {
+#ifndef WIN32
     TERM_FH = fopen("/dev/tty", "w");
     if (!TERM_FH)
         TERM_FH = stdout;
+#else
+    TERM_FH = fopen("CONOUT$", "w+");
+    WIN_CONSOLE = (HANDLE)_get_osfhandle(fileno(TERM_FH));
+#endif
 }
 
 int term_width(void)
 {
+#ifndef WIN32
     struct winsize w;
     ioctl(fileno(TERM_FH), TIOCGWINSZ, &w);
     return w.ws_col;
-}
-
-void move_to_top(void)
-{
-    fprintf(TERM_FH, "\033[7A");
-}
-
-void move_to_x(int x)
-{
-    fprintf(TERM_FH, "\033[%dC", x);
-}
-
 #else
-
-HANDLE con;
-
-void open_term()
-{
-    TERM_FH = fopen("CONOUT$", "w+");
-    con = (HANDLE)_get_osfhandle(fileno(TERM_FH));
-}
-
-int term_width(void)
-{
     CONSOLE_SCREEN_BUFFER_INFO ci;
-    GetConsoleScreenBufferInfo(con, &ci);
+    GetConsoleScreenBufferInfo(WIN_CONSOLE, &ci);
     return ci.dwSize.X;
+#endif
 }
 
 void move_to_top(void)
 {
+#ifndef WIN32
+    fprintf(TERM_FH, "\033[7A");
+#else
     CONSOLE_SCREEN_BUFFER_INFO ci;
-    GetConsoleScreenBufferInfo(con, &ci);
+    GetConsoleScreenBufferInfo(WIN_CONSOLE, &ci);
     ci.dwCursorPosition.X = 0;
     ci.dwCursorPosition.Y -= 7;
-    SetConsoleCursorPosition(con, ci.dwCursorPosition);
+    SetConsoleCursorPosition(WIN_CONSOLE, ci.dwCursorPosition);
+#endif
 }
 
 void move_to_x(int x)
 {
+#ifndef WIN32
+    fprintf(TERM_FH, "\033[%dC", x);
+#else
     CONSOLE_SCREEN_BUFFER_INFO ci;
-    GetConsoleScreenBufferInfo(con, &ci);
+    GetConsoleScreenBufferInfo(WIN_CONSOLE, &ci);
     ci.dwCursorPosition.X = x;
-    SetConsoleCursorPosition(con, ci.dwCursorPosition);
-}
-
+    SetConsoleCursorPosition(WIN_CONSOLE, ci.dwCursorPosition);
 #endif
+}
 
 void line_at(int start_x, const char *s)
 {
@@ -213,9 +200,7 @@ void line_at(int start_x, const char *s)
 #endif
         fputc('\n', TERM_FH);
 
-#ifdef WIN32
     fflush(TERM_FH);
-#endif
 }
 
 void push_car(int x)
