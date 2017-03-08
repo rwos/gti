@@ -37,7 +37,7 @@ uninstall:
 	rm -f $(MANDIR)/$(MANPAGE)
 
 fmt: *.c
-	VERSION_CONTROL=never indent -kr -i4 -nut -l100 -cp0 -ncs -ppi 4 \
+	VERSION_CONTROL=never indent -kr -i4 -ppi4 -nut -l100 -cp0 -ncs -sob \
 		-T HANDLE \
 		$^
 

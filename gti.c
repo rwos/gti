@@ -29,14 +29,14 @@
 #    include <process.h>
 #    include <io.h>
 
-/* usleep() doesn't exist on MSVC, instead use Sleep() from Win32 API */
+    /* usleep() doesn't exist on MSVC, instead use Sleep() from Win32 API */
 #    define usleep(a) Sleep((a) / 1000)
 
-/*
- * exec*() on MSVC makes the parent process exit; that means that gti.exe will finish as git is starting,
- * which causes cmd.exe to print its prompt over git's output (because it sees that the child process has
- * finished). The solution is to use synchronous spawn*(): it will make gti.exe to wait until git finishes.
- */
+    /*
+     * exec*() on MSVC makes the parent process exit; that means that gti.exe will finish as git is starting,
+     * which causes cmd.exe to print its prompt over git's output (because it sees that the child process has
+     * finished). The solution is to use synchronous spawn*(): it will make gti.exe to wait until git finishes.
+     */
 #    define execv(a, b) do { i = _spawnv(_P_WAIT, (a), (b)); if (i != -1) return i; } while(0)
 #    define execvp(a, b) do { i = _spawnvp(_P_WAIT, (a), (b)); if (i != -1) return i; } while(0)
 
@@ -55,7 +55,6 @@
 #    include <sys/termios.h>
 #endif
 
-
 #define GIT_NAME "git"
 
 #ifndef GTI_SPEED
@@ -68,9 +67,11 @@ void open_term();
 void move_to_top(void);
 void line_at(int start_x, const char *s);
 void clear_car(int x);
+
+typedef void (*draw_fn_t)(int x);
 void draw_car(int x);
 void push_car(int x);
-int check_push_command(int argc, char **argv);
+draw_fn_t select_command(int argc, char **argv);
 
 int TERM_WIDTH;
 FILE *TERM_FH;
@@ -80,7 +81,9 @@ int main(int argc, char **argv)
 {
     int i;
     char *git_path;
-    int pushing = check_push_command(argc, argv);
+    draw_fn_t draw_fn;
+
+    draw_fn = select_command(argc, argv);
 
     open_term();
     TERM_WIDTH = term_width();
@@ -88,15 +91,13 @@ int main(int argc, char **argv)
 
     init_space();
     for (i = -20; i < TERM_WIDTH; i++) {
-        if (pushing)
-            push_car(i);
-        else
-            draw_car(i);
+        draw_fn(i);
         usleep(SLEEP_DELAY);
         clear_car(i);
     }
     move_to_top();
     fflush(TERM_FH);
+
     git_path = getenv("GIT");
     if (git_path) {
         execv(git_path, argv);
@@ -108,8 +109,7 @@ int main(int argc, char **argv)
     return 1;
 }
 
-/* return 1 if push command found*/
-int check_push_command(int argc, char **argv)
+draw_fn_t select_command(int argc, char **argv)
 {
     int i;
 
@@ -117,10 +117,10 @@ int check_push_command(int argc, char **argv)
         if (argv[i][0] == '-')
             continue;
         if (!strcmp(argv[i], "push"))
-            return 1;
+            return push_car;
         break;
     }
-    return 0;
+    return draw_car;
 }
 
 void init_space(void)
