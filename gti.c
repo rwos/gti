@@ -69,7 +69,7 @@ void move_to_top(void);
 void line_at(int start_x, const char *s);
 void clear_car(int x);
 
-typedef void (*draw_fn_t)(int x);
+typedef void (*draw_fn_t) (int x);
 void draw_std(int x);
 void draw_push(int x);
 draw_fn_t select_command(int argc, char **argv);
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 
     tmp = getenv("GTI_SPEED");
     if (!tmp || sscanf(tmp, "%u", &gti_speed) != 1) {
-       gti_speed = GTI_SPEED;
+        gti_speed = GTI_SPEED;
     }
     open_term();
     TERM_WIDTH = term_width();
