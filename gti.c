@@ -266,8 +266,8 @@ void draw_pull(int x)
     line_at(x, "   '-:-'                '-:-'      ||  ");
     } else {
     line_at(x, "=  .:-:.    |________|  .:-:.  = >-||");
-    line_at(x, "  `   X   --------------   X   '  /  \\");
-    line_at(x, "    ':-:'                ':-:'   /    \\");
+    line_at(x, " `   X   --------------   X   '   /  \\");
+    line_at(x, "   ':-:'                ':-:'    /    \\");
     }
     /* *INDENT-ON* */
     usleep(FRAME_TIME * 8);
