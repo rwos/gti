@@ -11,6 +11,7 @@ From a package system:
 * it's in ArchLinux' AUR as [gti-git](https://aur.archlinux.org/packages/gti-git/) and as [gti](https://aur.archlinux.org/packages/gti/)
 * [Gentoo](https://packages.gentoo.org/packages/dev-vcs/gti)
 * [Nix/NixOS](https://github.com/NixOS/nixpkgs/pull/13453)
+* [Ubuntu](https://launchpad.net/~mamantoha/+archive/ubuntu/gti)
 * [FreeBSD ports](http://svnweb.freebsd.org/ports/head/games/gti/)
 * [OpenBSD ports](http://openports.se/games/gti)
 * [Homebrew/MacOS X](http://braumeister.org/formula/gti)
