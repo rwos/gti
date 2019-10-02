@@ -7,7 +7,7 @@ Build and Install
 -----------------
 
 From a package system:
-* [Fedora](https://admin.fedoraproject.org/pkgdb/package/rpms/gti/)
+* [Fedora](https://src.fedoraproject.org/rpms/gti)
 * it's in ArchLinux' AUR as [gti-git](https://aur.archlinux.org/packages/gti-git/) and as [gti](https://aur.archlinux.org/packages/gti/)
 * [Gentoo](https://packages.gentoo.org/packages/dev-vcs/gti)
 * [Nix/NixOS](https://github.com/NixOS/nixpkgs/pull/13453)
