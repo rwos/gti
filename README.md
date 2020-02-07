@@ -24,10 +24,22 @@ From source:
 
 The default install PREFIX is `/usr/bin`.
 
-You can change the speed of the car at runtime via `GTI_SPEED`.
-For example:
 
-    $ GTI_SPEED=2000 gti push # default is 1000
+Settings
+--------
+The following environment variables are supported:
+* `GTI_NO_GIT`: If set, only plays animation without runing git. To revert to default, unset it. _(default: run git)_
+
+Example:
+```
+$ GTI_NO_GIT=42 gti push
+```
+* `GTI_SPEED`: Changes the speed of the car. _(default: 1000)_
+
+Example:
+```
+$ GTI_SPEED=2000 gti push
+```
 
 Usage
 -----

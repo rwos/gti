@@ -104,6 +104,9 @@ int main(int argc, char **argv)
     move_to_top();
     fflush(TERM_FH);
 
+    if (getenv("GTI_NO_GIT")) {
+        return 0;
+    }
     git_path = getenv("GIT");
     if (git_path) {
         execv(git_path, argv);
