@@ -73,6 +73,7 @@ typedef void (*draw_fn_t) (int x);
 void draw_std(int x);
 void draw_push(int x);
 void draw_pull(int x);
+void draw_tag(int x);
 draw_fn_t select_command(int argc, char **argv);
 
 FILE *TERM_FH;
@@ -99,7 +100,6 @@ int main(int argc, char **argv)
     init_space();
     for (i = -20; i < TERM_WIDTH; i++) {
         draw_fn(i);
-        clear_car(i);
     }
     move_to_top();
     fflush(TERM_FH);
@@ -126,6 +126,8 @@ draw_fn_t select_command(int argc, char **argv)
             return draw_push;
         if (!strcmp(argv[i], "pull"))
             return draw_pull;
+        if (!strcmp(argv[i], "tag"))
+            return draw_tag;
         break;
     }
     return draw_std;
@@ -133,7 +135,7 @@ draw_fn_t select_command(int argc, char **argv)
 
 void init_space(void)
 {
-    fputs("\n\n\n\n\n\n\n", TERM_FH);   /* 8 lines, to not remove the PS1 line */
+    fputs("\n\n\n\n\n\n\n\n", TERM_FH);   /* 9 lines, to not remove the PS1 line */
     fflush(TERM_FH);
 }
 
@@ -165,12 +167,12 @@ int term_width(void)
 void move_to_top(void)
 {
 #ifndef WIN32
-    fprintf(TERM_FH, "\033[7A");
+    fprintf(TERM_FH, "\033[8A");
 #else
     CONSOLE_SCREEN_BUFFER_INFO ci;
     GetConsoleScreenBufferInfo(WIN_CONSOLE, &ci);
     ci.dwCursorPosition.X = 0;
-    ci.dwCursorPosition.Y -= 7;
+    ci.dwCursorPosition.Y -= 8;
     SetConsoleCursorPosition(WIN_CONSOLE, ci.dwCursorPosition);
 #endif
 }
@@ -214,6 +216,7 @@ void draw_std(int x)
 {
     /* *INDENT-OFF* */
     move_to_top();
+    line_at(x, " ");
     line_at(x, "   ,---------------.");
     line_at(x, "  /  /``````|``````\\\\");
     line_at(x, " /  /_______|_______\\\\________");
@@ -229,12 +232,15 @@ void draw_std(int x)
     }
     /* *INDENT-ON* */
     usleep(FRAME_TIME);
+
+    clear_car(x);
 }
 
 void draw_push(int x)
 {
     /* *INDENT-OFF* */
     move_to_top();
+    line_at(x, " ");
     line_at(x, "   __      ,---------------.");
     line_at(x, "  /--\\   /  /``````|``````\\\\");
     line_at(x, "  \\__/  /  /_______|_______\\\\________");
@@ -250,12 +256,15 @@ void draw_push(int x)
     }
     /* *INDENT-ON* */
     usleep(FRAME_TIME * 10);
+
+    clear_car(x);
 }
 
 void draw_pull(int x)
 {
     /* *INDENT-OFF* */
     move_to_top();
+    line_at(x, " ");
     line_at(x, "   ,---------------.               __");
     line_at(x, "  /  /``````|``````\\\\             /--\\");
     line_at(x, " /  /_______|_______\\\\________    \\__/");
@@ -271,11 +280,45 @@ void draw_pull(int x)
     }
     /* *INDENT-ON* */
     usleep(FRAME_TIME * 8);
+
+    clear_car(x);
+}
+
+void draw_tag(int iteration)
+{
+    const int car_x = 4;
+    int car_y = 0;
+    int keyframe = ((iteration + 20) / 4) % 3;
+
+    /* *INDENT-OFF* */
+    move_to_top();
+    line_at(car_x, "     ,-------------, .     ");
+    line_at(car_x, "    /     [_o_]     \\|    ");
+    line_at(car_x, " []/_________________|[]   ");
+    line_at(car_x, "  /__/_____________\\__\\  ");
+    line_at(car_x, "d|/``\\=(_)=====(_)=/``\\|b");
+    line_at(car_x, " |\\__/=============\\__/| ");
+    line_at(car_x, " \\-----|__G_T_I__|-----/  ");
+    if (keyframe == 1)
+    line_at(car_x, "  !\\/!             !\\/!");
+    else if (keyframe == 2)
+    line_at(car_x, "  ;/\\;             ;/\\;");
+    else
+    line_at(car_x, "  ||||             ||||");
+    /* *INDENT-ON* */
+    usleep(FRAME_TIME * 2);
+
+    /* clear it */
+    move_to_top();
+    for (car_y = 0; car_y < 8; car_y++) {
+        line_at(car_x, "                           ");
+    }
 }
 
 void clear_car(int x)
 {
     move_to_top();
+    line_at(x, "  ");
     line_at(x, "  ");
     line_at(x, "  ");
     line_at(x, "  ");
