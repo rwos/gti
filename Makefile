@@ -6,8 +6,9 @@ CFLAGS+=-O2 -std=c89 -Wpedantic -Wall -Wextra -Wunused -Wshadow -Wdouble-promoti
 INSTALL=install -D
 INSTALL_DATA=$(INSTALL) -m 644
 
-BINDIR=$(DESTDIR)/usr/bin
-MANDIR=$(DESTDIR)/usr/share/man/man6
+DESTDIR=/usr
+BINDIR=$(DESTDIR)/bin
+MANDIR=$(DESTDIR)/share/man/man6
 
 STRIP=strip
 ifeq ($(OS),Windows_NT)
