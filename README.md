@@ -10,13 +10,11 @@ From a package system:
 * [Fedora](https://src.fedoraproject.org/rpms/gti)
 * it's in ArchLinux' AUR as [gti-git](https://aur.archlinux.org/packages/gti-git/) and as [gti](https://aur.archlinux.org/packages/gti/)
 * [Gentoo](https://packages.gentoo.org/packages/dev-vcs/gti)
-* [Nix/NixOS](https://github.com/NixOS/nixpkgs/pull/13453)
-* [Ubuntu](https://launchpad.net/~mamantoha/+archive/ubuntu/gti)
+* [Nix/NixOS](https://search.nixos.org/packages?show=gti&query=gti)
 * [FreeBSD ports](http://svnweb.freebsd.org/ports/head/games/gti/)
 * [OpenBSD ports](http://openports.se/games/gti)
-* [Homebrew/MacOS X](http://braumeister.org/formula/gti)
+* [Homebrew/MacOS X](https://formulae.brew.sh/formula/gti#default)
 * [Cygwin](https://cygwin.com/packages/summary/gti.html)
-* ([it's not in Debian yet](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=705850))
 
 From source:
 
