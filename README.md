@@ -15,6 +15,7 @@ From a package system:
 * [FreeBSD ports](http://svnweb.freebsd.org/ports/head/games/gti/)
 * [OpenBSD ports](http://openports.se/games/gti)
 * [Homebrew/MacOS X](http://braumeister.org/formula/gti)
+* [Cygwin](https://cygwin.com/packages/summary/gti.html)
 * ([it's not in Debian yet](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=705850))
 
 From source:
