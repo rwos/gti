@@ -21,6 +21,10 @@ From source:
     $ make
     $ make install # as root, probably
 
+or
+
+    $ make PREFIX=~/.local install # as a user
+
 The default install PREFIX is `/usr/bin`.
 
 You can change the speed of the car at runtime via `GTI_SPEED`.

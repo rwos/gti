@@ -1,13 +1,15 @@
 SHELL=/bin/sh
 
+PREFIX?=$(DESTDIR)/usr
+
 CC=cc
 CFLAGS+=-O2 -std=c89 -Wpedantic -Wall -Wextra -Wunused -Wshadow -Wdouble-promotion -Wstrict-overflow=5
 
 INSTALL=install -D
 INSTALL_DATA=$(INSTALL) -m 644
 
-BINDIR=$(DESTDIR)/usr/bin
-MANDIR=$(DESTDIR)/usr/share/man/man6
+BINDIR=$(PREFIX)/bin
+MANDIR=$(PREFIX)/share/man/man6
 
 STRIP=strip
 ifeq ($(OS),Windows_NT)
