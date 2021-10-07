@@ -143,7 +143,7 @@ void open_term()
 {
 #ifndef WIN32
     TERM_FH = stdout;
-    if (!setvbuf(TERM_FH, NULL, _IOFBF, BUFSIZ))
+    if (setvbuf(TERM_FH, NULL, _IOFBF, BUFSIZ))
         perror("setvbuf");
 #else
     TERM_FH = fopen("CONOUT$", "w+");
