@@ -142,9 +142,9 @@ void init_space(void)
 void open_term()
 {
 #ifndef WIN32
-    TERM_FH = fopen("/dev/tty", "w");
-    if (!TERM_FH)
-        TERM_FH = stdout;
+    TERM_FH = stdout;
+    if (!setvbuf(TERM_FH, NULL, _IOFBF, BUFSIZ))
+        perror("setvbuf");
 #else
     TERM_FH = fopen("CONOUT$", "w+");
     WIN_CONSOLE = (HANDLE)_get_osfhandle(fileno(TERM_FH));
