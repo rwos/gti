@@ -11,7 +11,8 @@ INSTALL_DATA=$(INSTALL) -m 644
 
 bindir=$(prefix)/bin
 datarootdir=$(prefix)/share
-mandir=$(datarootdir)/man/man6
+mandir=$(datarootdir)/man
+man6dir=$(mandir)/man6
 BASHCOMPLDIR=$(datarootdir)/bash-completion/completions
 ZSHCOMPLDIR=$(datarootdir)/zsh/site-functions
 
@@ -36,13 +37,13 @@ $(MANPAGE): gti.6
 
 install: $(PROG) $(MANPAGE)
 	$(INSTALL) $(PROG) $(bindir)/$(PROG)
-	$(INSTALL_DATA) $(MANPAGE) $(mandir)/$(MANPAGE)
+	$(INSTALL_DATA) $(MANPAGE) $(man6dir)/$(MANPAGE)
 	$(INSTALL_DATA) completions/gti.bash $(BASHCOMPLDIR)/$(PROG)
 	$(INSTALL_DATA) completions/gti.zsh $(ZSHCOMPLDIR)/_$(PROG)
 
 uninstall:
 	rm -f $(bindir)/$(PROG)
-	rm -f $(mandir)/$(MANPAGE)
+	rm -f $(man6dir)/$(MANPAGE)
 
 fmt: *.c
 	VERSION_CONTROL=never indent -kr -i4 -ppi4 -nut -l100 -cp0 -ncs -sob \
