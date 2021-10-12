@@ -10,7 +10,10 @@ INSTALL=install -D
 INSTALL_DATA=$(INSTALL) -m 644
 
 bindir=$(prefix)/bin
-mandir=$(prefix)/share/man/man6
+datarootdir=$(prefix)/share
+mandir=$(datarootdir)/man/man6
+BASHCOMPLDIR=$(datarootdir)/bash-completion/completions
+ZSHCOMPLDIR=$(datarootdir)/zsh/site-functions
 
 STRIP=strip
 ifeq ($(OS),Windows_NT)
@@ -34,6 +37,8 @@ $(MANPAGE): gti.6
 install: $(PROG) $(MANPAGE)
 	$(INSTALL) $(PROG) $(bindir)/$(PROG)
 	$(INSTALL_DATA) $(MANPAGE) $(mandir)/$(MANPAGE)
+	$(INSTALL_DATA) completions/gti.bash $(BASHCOMPLDIR)/$(PROG)
+	$(INSTALL_DATA) completions/gti.zsh $(ZSHCOMPLDIR)/_$(PROG)
 
 uninstall:
 	rm -f $(bindir)/$(PROG)
