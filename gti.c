@@ -69,7 +69,7 @@ void move_to_top(void);
 void line_at(int start_x, const char *s);
 void clear_car(int x);
 
-typedef void (*draw_fn_t) (int x);
+typedef void (*draw_fn_t)(int x);
 void draw_std(int x);
 void draw_push(int x);
 void draw_pull(int x);
@@ -135,7 +135,7 @@ draw_fn_t select_command(int argc, char **argv)
 
 void init_space(void)
 {
-    fputs("\n\n\n\n\n\n\n\n", TERM_FH);   /* 9 lines, to not remove the PS1 line */
+    fputs("\n\n\n\n\n\n\n\n", TERM_FH); /* 9 lines, to not remove the PS1 line */
     fflush(TERM_FH);
 }
 
@@ -167,7 +167,11 @@ int term_width(void)
 void move_to_top(void)
 {
 #ifndef WIN32
+#    ifndef __MVS__
     fprintf(TERM_FH, "\033[8A");
+#    else
+    fprintf(TERM_FH, "\047[8A");
+#    endif
 #else
     CONSOLE_SCREEN_BUFFER_INFO ci;
     GetConsoleScreenBufferInfo(WIN_CONSOLE, &ci);
@@ -180,7 +184,11 @@ void move_to_top(void)
 void move_to_x(int x)
 {
 #ifndef WIN32
+#    ifndef __MVS__
     fprintf(TERM_FH, "\033[%dC", x);
+#    else
+    fprintf(TERM_FH, "\047[%dC", x);
+#    endif
 #else
     CONSOLE_SCREEN_BUFFER_INFO ci;
     GetConsoleScreenBufferInfo(WIN_CONSOLE, &ci);
