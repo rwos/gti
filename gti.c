@@ -16,7 +16,7 @@
 #    define WIN32
 #else
      /* fileno() */
-#    define _POSIX_C_SOURCE 1
+#    define _POSIX_C_SOURCE 199506L
      /* usleep() */
 #    define _DEFAULT_SOURCE
 #endif
