@@ -22,6 +22,8 @@ ifeq ($(OS),Windows_NT)
 else
   ifeq ($(shell uname), SunOS)
     STRIP=gstrip
+  else ifeq ($(shell uname), Darwin)
+    STRIP=echo
   endif
 endif
 
