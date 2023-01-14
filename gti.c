@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 
 #if defined(WIN32) && !defined(__CYGWIN__)
 #    include <process.h>
@@ -87,6 +88,8 @@ int main(int argc, char **argv)
     char *tmp;
     unsigned int gti_speed;
     draw_fn_t draw_fn;
+
+    signal(SIGINT, SIG_IGN);
 
     tmp = getenv("GTI_SPEED");
     if (!tmp || sscanf(tmp, "%u", &gti_speed) != 1) {
