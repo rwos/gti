@@ -331,15 +331,15 @@ void draw_commit(int iteration)
     line_at(car_x, " []/_________________|[]   ");
     line_at(car_x, "  /__/_____________\\__\\  ");
     if (keyframe == 1)
-        line_at(car_x, "d|/$$$\=(_)=====(_)=/$$$\|b");
+        line_at(car_x, "d|/$$\\=(_)=====(_)=/$$\\|b");
     else if (keyframe == 2)
-        line_at(car_x, "d|/###\=(_)=====(_)=/###\|b");
+        line_at(car_x, "d|/##\\=(_)=====(_)=/##\\|b");
     else
         line_at(car_x, "d|/``\\=(_)=====(_)=/``\\|b");
     if (keyframe == 1)
-        line_at(car_x, " |\$$$/=============\$$$/| ");
+        line_at(car_x, " |\\$$/=============\\$$/| ");
     else if (keyframe == 2)
-        line_at(car_x, " |\###/=============\###/| ");
+        line_at(car_x, " |\\##/=============\\##/| ");
     else
         line_at(car_x, " |\\__/=============\\__/| ");
     line_at(car_x, " \\-----|__G_T_I__|-----/  ");
