@@ -15,6 +15,10 @@ mandir=$(datarootdir)/man
 man6dir=$(mandir)/man6
 BASHCOMPLDIR=$(datarootdir)/bash-completion/completions
 ZSHCOMPLDIR=$(datarootdir)/zsh/site-functions
+DIRS=$(prefix) $(bindir) $(datarootdir) $(mandir) $(man6dir) $(BASHCOMPLDIR) $(ZSHCOMPLDIR)
+
+$(DIRS):
+	mkdir -p "$@"
 
 STRIP=strip
 ifeq ($(OS),Windows_NT)
@@ -37,7 +41,7 @@ $(PROG): *.c
 $(MANPAGE): gti.6
 	gzip -9 -n -c gti.6 > gti.6.gz
 
-install: $(PROG) $(MANPAGE)
+install: $(PROG) $(MANPAGE) $(DIRS)
 	$(INSTALL) $(PROG) $(bindir)/$(PROG)
 	$(INSTALL_DATA) $(MANPAGE) $(man6dir)/$(MANPAGE)
 	$(INSTALL_DATA) completions/gti.bash $(BASHCOMPLDIR)/$(PROG)
