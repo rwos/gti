@@ -16,7 +16,12 @@
 #    define WIN32
 #else
      /* fileno() */
+#if defined(__MVS__)
+     /* _POSIX_C_SOURCE has to be 1, 2 or 200112L on z/OS */
+#    define _POSIX_C_SOURCE 200112L
+#else
 #    define _POSIX_C_SOURCE 199506L
+#endif
      /* usleep() */
 #    define _DEFAULT_SOURCE
 #endif
